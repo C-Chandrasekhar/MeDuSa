@@ -65,7 +65,6 @@ def gameloop():
 
 		while gameOver == True:
 			gameDisplay.fill(white)
-			#message_to_screen("your score is :"+str(snakeLength-1), green)
 			message_to_screen("your score is : "+str(snakeLength-1) +'  Game Over, press c to replay and q to exit', red)
 			pygame.display.update()
 
@@ -101,16 +100,6 @@ def gameloop():
 		# exit game when touches borders
 		if head_x >display_width or  head_x <0 or head_y >display_height or head_y <0:
 			gameOver=True
-
-		# to get borders unbunded
-		# if head_x >display_width:
-		# 	head_x=0
-		# if head_x <0:
-		# 	head_x=display_width
-		# if head_y >display_height:
-		# 	head_y=0
-		# if head_y <0:
-		# 	head_y=display_height
 
 		head_x+=head_x_change
 		head_y+=head_y_change
