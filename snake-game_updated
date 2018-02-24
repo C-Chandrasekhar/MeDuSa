@@ -22,7 +22,6 @@ block_size=10
 fps=10
 clock = pygame.time.Clock()
 
-
 def snake(block_size , snakeList):
 	for XnY in snakeList:
 		pygame.draw.rect(gameDisplay , green , [XnY[0] , XnY[1],block_size , block_size])
@@ -48,8 +47,7 @@ def gameloop():
 	randAppleX= round(random.randrange(0,display_width-block_size)/ 10.0)*10.0
 	randAppleY= round(random.randrange(0,display_height-block_size)/10.0)*10.0
 	apple=[randAppleX , randAppleY]
-
-
+	
 	objectList=[]
 	for i in range (1,20):
 		objectMem=[]
