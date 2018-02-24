@@ -1,0 +1,165 @@
+
+import pygame
+import time
+import random
+
+pygame.init()
+
+display_width=600
+display_height=400
+
+gameDisplay = pygame.display.set_mode((display_width,display_height))
+pygame.display.set_caption('Snake-Game')
+
+#to set colours to blocks
+white = (255,255,255)
+black = (0,0,0)
+red = (255,0,0)
+green = (0 , 150 , 0)
+blue = (0, 0, 180)
+
+block_size=10
+fps=10
+clock = pygame.time.Clock()
+
+
+def snake(block_size , snakeList):
+	for XnY in snakeList:
+		pygame.draw.rect(gameDisplay , green , [XnY[0] , XnY[1],block_size , block_size])
+
+font = pygame.font.SysFont(None , 25)
+def message_to_screen(msg , color):
+	textSurface = font.render(msg , True , color)
+	textRect= textSurface.get_rect()
+	textRect.center = display_width/2 , display_height/2
+	gameDisplay.blit(textSurface , textRect)
+
+def gameloop():
+	gameExit = False
+	gameOver = False
+	head_x=display_width/2
+	head_y=display_height/2
+
+	head_x_change=0
+	head_y_change=0
+
+	snakeList=[]
+	snakeLength=1
+	randAppleX= round(random.randrange(0,display_width-block_size)/ 10.0)*10.0
+	randAppleY= round(random.randrange(0,display_height-block_size)/10.0)*10.0
+	apple=[randAppleX , randAppleY]
+
+
+	objectList=[]
+	for i in range (1,20):
+		objectMem=[]
+		randX=round(random.randrange(0,display_width-block_size)/ 10.0)*10.0
+		randY=round(random.randrange(0,display_height-block_size)/ 10.0)*10.0
+		objectMem.append(randX)
+		objectMem.append(randY)
+		if objectMem!=apple:
+			objectList.append(objectMem)
+			pygame.draw.rect(gameDisplay , blue , [randX , randY, block_size , block_size])
+
+	while not gameExit:
+
+		while gameOver == True:
+			gameDisplay.fill(white)
+			#message_to_screen("your score is :"+str(snakeLength-1), green)
+			message_to_screen("your score is : "+str(snakeLength-1) +'  Game Over, press c to replay and q to exit', red)
+			pygame.display.update()
+
+			for event in pygame.event.get():
+				if event.type == pygame.QUIT:
+					gameExit=True
+					gameOver=False
+				if event.type== pygame.KEYDOWN:
+					if event.key== pygame.K_q:
+						gameExit=True
+						gameOver=False
+					if event.key==pygame.K_c:
+						gameloop()
+
+		for event in pygame.event.get():
+			#print(event)
+			if event.type==pygame.QUIT:
+				gameExit=True
+			if event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_LEFT:
+					head_x_change= -block_size
+					head_y_change=0
+				if event.key == pygame.K_RIGHT:
+					head_x_change= block_size
+					head_y_change=0
+				if event.key == pygame.K_DOWN:
+					head_y_change= block_size
+					head_x_change= 0
+				if event.key == pygame.K_UP:
+					head_y_change= -block_size
+					head_x_change= 0
+
+		# exit game when touches borders
+		if head_x >display_width or  head_x <0 or head_y >display_height or head_y <0:
+			gameOver=True
+
+		# to get borders unbunded
+		# if head_x >display_width:
+		# 	head_x=0
+		# if head_x <0:
+		# 	head_x=display_width
+		# if head_y >display_height:
+		# 	head_y=0
+		# if head_y <0:
+		# 	head_y=display_height
+
+		head_x+=head_x_change
+		head_y+=head_y_change
+
+		gameDisplay.fill(white)
+		pygame.draw.rect(gameDisplay , red , [randAppleX , randAppleY , block_size , block_size])
+
+		for obj in objectList:
+			pygame.draw.rect(gameDisplay , blue , [obj[0], obj[1], block_size , block_size])
+
+		snakeHead=[]
+		snakeHead.append(head_x)
+		snakeHead.append(head_y)
+		snakeList.append(snakeHead)
+		if len(snakeList) > snakeLength:
+			del snakeList[0]
+
+		for position in snakeList[:-1]:
+			if snakeHead== position:
+				gameOver=True
+
+		for obj in objectList:
+			if snakeHead== obj:
+				gameOver=True
+				
+		snake(block_size , snakeList)
+		pygame.display.update()
+
+		if head_x== randAppleX and head_y == randAppleY:
+			randAppleX= round(random.randrange(0,display_width-block_size)/ 10.0)*10.0
+			randAppleY= round(random.randrange(0,display_height-block_size)/10.0)*10.0
+			snakeLength+=1
+
+			objectList=[]
+			for i in range (1,20):
+				objectMem=[]
+				randX=round(random.randrange(0,display_width-block_size)/ 10.0)*10.0
+				randY=round(random.randrange(0,display_height-block_size)/ 10.0)*10.0
+				objectMem.append(randX)
+				objectMem.append(randY)
+				objectList.append(objectMem)
+
+
+		pygame.display.set_caption("Snake-Game | Score :"+ str(snakeLength -1))
+		clock.tick(fps) # with the help of fps and block_size we can alter speed of motion and smoothen the game
+
+	pygame.quit()
+	quit()
+
+gameloop()
+
+
