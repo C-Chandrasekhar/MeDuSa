@@ -2,7 +2,7 @@
 import pygame
 import time
 import random
-
+ 
 #initialising pygame
 pygame.init()
 
@@ -97,11 +97,18 @@ def gameloop():
 					head_y_change= -block_size
 					head_x_change= 0
 
-		# exit game when touches borders
-		if head_x >display_width or  head_x <0 or head_y >display_height or head_y <0:
-			gameOver=True
+		#to get borders unbunded
+		if head_x >display_width:
+			head_x=0
+		if head_x <0:
+			head_x=display_width
+		if head_y >display_height:
+			head_y=0
+		if head_y <0:
+			head_y=display_height
 
-		#movement of snkae head
+
+		#movement of snakee head
 		head_x+=head_x_change
 		head_y+=head_y_change
 
@@ -114,7 +121,7 @@ def gameloop():
 		snakeHead.append(head_x)
 		snakeHead.append(head_y)
 		snakeList.append(snakeHead)
-
+		
 		#delete the extra nodes
 		if len(snakeList) > snakeLength:
 			del snakeList[0]
